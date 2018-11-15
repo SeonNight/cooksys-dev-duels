@@ -10,22 +10,29 @@ $('form').submit(() => {
     .then(data => {
       console.log(`Got data for ${username}`)
       console.log(data)
-      /*
-        TODO
-        Attach the data returned to the DOM
-        The data currently hard-coded into the DOM is placeholder data
-       */
-
+      $('.username').text(data.username)
+      $('.full-name').text(data.name)
+      $('.location').text(data.location)
+      $('.email').text(data.email)
+      $('.bio').text(data.bio)
+      $('.avatar').attr("src",data.avatar_url)
+      $('.titles').text(data.titles)
+      $('.favorite-language').text(data.favorite_language)
+      $('.total-stars').text(data.total_stars)
+      $('.most-starred').text(data.highest_starred)
+      $('.public-repos').text(data.public_repos)
+      $('.perfect-repos').text(data.perfect_repos)
+      $('.followers').text(data.followers)
+      $('.following').text(data.following)
       $('.user-results').removeClass('hide') // Display '.user-results' element
+      $('.user-error').addClass('hide')
     })
     .catch(err => {
       console.log(`Error getting data for ${username}`)
       console.log(err)
-      /*
-        TODO
-        If there is an error finding the user, instead toggle the display of the '.user-error' element
-        and populate it's inner span '.error' element with an appropriate error message
-      */
+      $('.user-results').addClass('hide')
+      $('.user-error').removeClass('hide')
+      $('.error').text('User Not Found')
     })
 
   return false // return false to prevent default form submission
