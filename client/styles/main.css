@@ -116,7 +116,10 @@ input:-ms-input-placeholder {
 }
 
 
-
+/*Make sure the image isn't too big*/
+img {
+    width: 100px;
+}
 
 
 

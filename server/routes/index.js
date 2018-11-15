@@ -9,28 +9,130 @@ import { url } from 'inspector';
 export default () => {
   let router = Router()
 
+  //Using Axios
+  const getInfo = (url) => {
+    return axios.get(url, {
+      headers: {
+        'Authorization': token
+      }
+    }).then(response => response.data)
+  }
+
+  //Get data for languages
+  const getLanguages = (data) => {
+    return Promise.all(data.map(repo => getInfo(repo.languages_url)))
+      .then(languages => languages.reduce((result, cur) => {
+          for(var key in cur) {
+            if(cur.hasOwnProperty(key)) {
+              if(result.hasOwnProperty(key)) {
+                result[key] = cur[key] + result[key]
+              } else {
+                result[key] = cur[key]
+              }
+            }
+          }
+          return result;
+        },{}))
+      .then(languages => {
+        if(Object.getOwnPropertyNames(languages).length == 0) {
+          return {
+            num_lang: 0,
+            fav: null
+          }
+        } else {
+          return {
+            num_lang: languages.length, //Number of languages
+            fav: Object.keys(languages).reduce((a, b) => languages[a] > languages[b] ? a : b) //Favorite language
+        }}})
+  }
+
+  const getRepoInfo = (url) => {
+    return getInfo(url)
+      .then(data => getLanguages(data) //Favorite language
+        .then(languages => {
+          if(data.length == 0) { //If you do nto have any repos
+            return {
+              total_stars: 0,
+              highest_starred: 0,
+              perfect_repos: 0,
+              num_fork: 0,
+              num_repos: 0,
+              languages: languages
+            }
+          } else {
+            return {
+              total_stars: data.map(k => k.stargazers_count).reduce((total, cur) => total + cur), //total number of stars
+              highest_starred: Math.max(...data.map(k => k.stargazers_count)), //the higheest number of stars
+              perfect_repos: data.filter(repo => repo.open_issues == 0).length, //Number of repose without open issues
+              num_fork: data.map(k => k.fork).reduce((total,cur) => {if(cur) {return total+1} else {return total}},0), //Number forked
+              num_repos: data.length, //number of repos
+              languages: languages
+          }}})) //Languages data
+  }
+
+  const getTitles = (data, repoData) => {
+    let titles = []
+    if(repoData.num_fork/repoData.num_repos > 0.5) { //50% or more repositories are forked
+      titles.push('Forker')
+    }
+
+    if(repoData.languages.num_lang == 1) { //100% of repositories use the same language
+      titles.push('One-Trick Poney')
+    } else if (repoData.languages.num_lang > 10) { //Uses more than 10 languages across all repositories
+      titles.push('Jack of all Trades')
+    }
+
+    if(data.following > data.followers * 2) { //The number of people this user is following is at least double the number of followers
+      titles.push('Staker')
+    } else if (data.followers > data.following * 2) { //The number of followers this user has is at least double the number of following
+      titles.push('Mr. Popular')
+    }
+  
+    if(repoData.num_repos == 0) { //Have no public repositories
+      titles.push('Wall Flower')
+    }
+
+    if(titles.length == 0) {  //Have no titles
+      titles.push('Titleless')
+    } else if (titles.length > 3) { //Has more than 3 titles
+      titles.push('Title Collector')
+    }
+
+    return titles
+  }
+
   const getUserInfo = (username) => {
     return axios.get(`http://api.github.com/users/`+username, {
       headers: {
         'Authorization': token
       }
     }).then(response => response.data)
-      .then(data => {return {
-        username: data.login,
-        name: data.name,
-        location: data.location,
-        email: data.email,
-        bio: data.bio,
-        avatar_url: data.avatar_url,
-        titles: ['test title'],
-        favorite_language: "Favorite language",
-        public_repos: data.public_repos,
-        total_stars: "Total number of stars",
-        highest_starred: 'what is your highest star count',
-        perfect_repos: 'number of perfect repos',
-        followers: data.followers,
-        following: data.following
-      }})
+      .then(data => {
+        return getRepoInfo(data.repos_url)
+          .then(repoData => {
+            return {
+              status: 200,
+              username: data.login,
+              name: data.name,
+              location: data.location,
+              email: data.email,
+              bio: data.bio,
+              avatar_url: data.avatar_url,
+              titles: getTitles(data,repoData),
+              favorite_language: repoData.languages.fav,
+              public_repos: data.public_repos,
+              total_stars: repoData.total_stars,
+              highest_starred: repoData.highest_starred,
+              perfect_repos: repoData.perfect_repos,
+              followers: data.followers,
+              following: data.following}
+          })
+        })
+    .catch(err => {
+      return {
+        status: err.response.status,
+        message: err.response.data.message}
+    })
   }
 
 
@@ -59,17 +161,16 @@ export default () => {
       .then(data => res.json(data))
       .catch(error => {
         if (error.response) {
-          console.log(error.response.status);
-          console.log(error.response.data);
-          console.log(error.response.headers);
+          console.log(error.response.status)
+          console.log(error.response.data)
         }
+        res.json({status: error.response.status, message: error.response.data.message})
       })
   })
 
   //http://localhost:3000/api/users?username=gaearon&username=qbolt
   /** GET /api/users? - Get users */
   router.get('/users/', validate(validation.users), (req, res) => {
-    console.log(req.query)
     /*
       TODO
       Fetch data for users specified in query
@@ -79,10 +180,10 @@ export default () => {
     .then(data => res.json(data))
     .catch(error => {
       if (error.response) {
-        console.log(error.response.status);
-        console.log(error.response.data);
-        console.log(error.response.headers);
+        console.log(error.response.status)
+        console.log(error.response.data)
       }
+      res.json({status: error.response.status, message: error.response.data.message})
     })
   })
 
