@@ -126,7 +126,7 @@ $('form').submit(() => {
       console.log(err)
       $('.duel-container').addClass('hide')
       $('#duel-error').removeClass('hide')
-      $('#duel-error .error').text(err)
+      $('#duel-error .error').text("ERROR")
     })
 
   return false // return false to prevent default form submission

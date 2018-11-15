@@ -21,15 +21,114 @@ main .link-container button {
     padding: 14px 28px;
 }
 
-main hr {
-    margin: 0 24px;
-    border-color: #555555;
-    background-color: #555555;
-    color: #555555;
+/*Button ANIMATION! for Inspect*/
+button span.magnifying-glass {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.2s;
 }
 
+button span.magnifying-glass:after {
+    /*content: '\00bb';*/
+    content: url('images/magnifying-glass.png');
+    position: absolute;
+    opacity: 0;
+    top: -13px;
+    right: 150px;
+    transition: 0.2s;
+}
+
+button:hover span.magnifying-glass {
+    padding-right: 40px;
+    color: white;
+}
+
+button:hover span.magnifying-glass:after {
+    opacity: 1;
+    right: -30px;
+}
+
+/*Button ANIMATION! for DEUL*/
 button.duel:hover {
-    background-color: red;
+    cursor: pointer;
+    background-color: rgb(133, 0, 0);
+    color: white;
+} 
+
+button.duel span.first-sword {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.2s;
+}
+
+button.duel span.first-sword {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.2s;
+}
+
+button.duel span.first-sword:after {
+    /*content: '\00bb';*/
+    content: url('images/dueling-sword.png');
+    position: absolute;
+    opacity: 0;
+    top: -13px;
+    right: 0px;
+    transition: 0.2s;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+button.duel:hover span.first-sword {
+    padding-right: 40px;
+    color: white;
+}
+
+button.duel:hover span.first-sword:after {
+    opacity: 1;
+    right: -28px;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+/*Second sword*/
+button.duel span.second-sword {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.2s;
+}
+
+button.duel span.second-sword:after {
+    content: url('images/dueling-sword.png');
+    position: absolute;
+    opacity: 0;
+    top: -13px;
+    right: -100px;
+    transition: 0.2s;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+
+button.duel:hover span.second-sword:after {
+    opacity: 1;
+    right: -43px;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
 }
 
 @media screen and (min-width: 650px) {

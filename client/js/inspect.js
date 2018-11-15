@@ -32,7 +32,7 @@ $('form').submit(() => {
         console.log(data.status)
         $('.user-results').addClass('hide')
         $('.user-error').removeClass('hide')
-        $('.error').text(data.username + ' not found')
+        $('.error').text(username + ' not found')
       }
     })
     .catch(err => {
@@ -40,7 +40,7 @@ $('form').submit(() => {
       console.log(err)
       $('.user-results').addClass('hide')
       $('.user-error').removeClass('hide')
-      $('.error').text(err.response.message)
+      $('.error').text('ERROR')
     })
 
   return false // return false to prevent default form submission
