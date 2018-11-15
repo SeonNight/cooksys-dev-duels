@@ -20,6 +20,7 @@ $('form').submit(() => {
   fetch(`${USER_URL}s?username=${usernameLeft}&username=${usernameRight}`)
     .then(response => response.json()) // Returns parsed json data from response body as promise
     .then(datas => {
+      $('#duel-error').addClass('hide')
       $('#error-left').addClass('hide')
       $('#error-right').addClass('hide')
       $('.left').addClass('hide')
@@ -46,7 +47,7 @@ $('form').submit(() => {
           $('.left').removeClass('hide')
         } else {
           console.log(`Error getting data for ${usernameLeft}`)
-          console.log(data["status"])
+          console.log(data.status)
           $('#error-left').removeClass('hide')
           $('#error-left .error').text(usernameLeft + ' not found')
         }
@@ -73,20 +74,59 @@ $('form').submit(() => {
           $('.right').removeClass('hide')
         } else {
           console.log(`Error getting data for ${usernameRight}`)
-          console.log(data["status"])
+          console.log(data.status)
           $('#error-right').removeClass('hide')
           $('#error-right .error').text(usernameRight + ' not found')
         }
       })
     .then(() => {
-      //Duel and stuff
+      //Make sure there are no errors on either side
+      if($('#error-right').hasClass("hide") && $('#error-left').hasClass("hide")){
+        console.log("RIGHT")
+        let pointRight = $('.right .titles').text().split(",").length * 10
+        console.log(pointRight)
+        pointRight += Number($('.right .total-stars').text()) * 20
+        console.log(pointRight)
+        pointRight += Number($('.right .highest-starred').text()) * 10
+        console.log(pointRight)
+        pointRight += Number($('.right .public-repos').text()) * 10
+        console.log(pointRight)
+        pointRight += Number($('.right .followers').text()) * 50
+        console.log(pointRight)
+        pointRight += Number($('.right .following').text()) * 5
+        console.log(pointRight)
+
+        console.log("LEFT")
+        let pointLeft = $('.left .titles').text().split(",").length * 10
+        console.log(pointLeft)
+        pointLeft += Number($('.left .total-stars').text()) * 20
+        console.log(pointLeft)
+        pointLeft += Number($('.left .highest-starred').text()) * 10
+        console.log(pointLeft)
+        pointLeft += Number($('.left .public-repos').text()) * 10
+        console.log(pointLeft)
+        pointLeft += Number($('.left .followers').text()) * 50
+        console.log(pointLeft)
+        pointLeft += Number($('.left .following').text()) * 5
+        console.log(pointLeft)
+
+        if(pointLeft > pointRight) {
+          $('#winner-result .username').text($('.left .username').text())
+        } else if (pointRight > pointLeft) {
+          $('#winner-result .username').text($('.right .username').text())
+        } else { //DRAW
+          $('#winner-result .label').text("DRAW")
+          $('#winner-result .username').text("")
+        }
+        $('#winner-result').removeClass("hide")
+      }
     })
     .catch(err => {
       console.log(`Error getting data for `)
       console.log(err)
       $('.duel-container').addClass('hide')
-      $('.duel-error').removeClass('hide')
-      $('.error').text(err.response.message)
+      $('#duel-error').removeClass('hide')
+      $('#duel-error .error').text(err)
     })
 
   return false // return false to prevent default form submission
