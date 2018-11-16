@@ -8,23 +8,19 @@
   It is up to the student to choose how to determine a 'winner'
   and displaying their profile/stats comparison in a way that signifies who won.
  */
+//Used to store timeout ids to stop if refreshed
 let id = []
 
 $('form').submit(() => {
   const usernameLeft = $('form [name=username-left]').val()
   const usernameRight = $('form [name=username-right]').val()
 
-  console.log("this is the start")
-
-  
-  console.log("is this the problem?")
   //Stop animation
   $('.versus').clearQueue()
   $('.left').clearQueue()
   $('.right').clearQueue()
   $('#winner-result').clearQueue()
 
-  console.log("Help")
   //Clear all timeouts
   let length = id.length
   for (var i = 0 ; i < length ; i++) {
@@ -41,9 +37,7 @@ $('form').submit(() => {
   $('.right').css("opacity","1")
   $('#winner-result').css("opacity","0")
 
-  console.log("not Refresthing")
-
-  //Refresh Area
+  //Refresh Area (hide or show what needs to be hidden or shown)
   $('#duel-error').addClass('hide')
   $('#error-left').addClass('hide')
   $('#error-right').addClass('hide')
@@ -54,8 +48,6 @@ $('form').submit(() => {
   $('.loading').removeClass('hide')
   $('.versus').addClass('hide')
   $('.score-containter').addClass('hide')
-
-  console.log("What is going on?")
 
   //Make sure both left and right Names are given
   if(usernameLeft == "") {
@@ -70,6 +62,7 @@ $('form').submit(() => {
     return false;
   }
 
+  //Add titles as icon
   const addTitles = (which, titles) => {
     $(`${which} .titles`).text("")
     titles.forEach((titleInfo) => {
