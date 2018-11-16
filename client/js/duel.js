@@ -110,6 +110,8 @@ $('form').submit(() => {
         $('.left').css("right", '1000px')
         $('.right').css("position", 'relative')
         $('.right').css("right", '-1000px')
+        $('.left').css("opacity","1")
+        $('.right').css("opacity","1")
         //Make em all visible
         $('.versus').removeClass('hide')
         $('.left').removeClass('hide')
@@ -139,6 +141,8 @@ $('form').submit(() => {
           })
         
         //DUELING! for points! :D
+
+        //Actually add points and animate how much points are given
         const addPoints = (which, target, point) => {
           $(`${which} ${target}`).append(`<span class="points">+${point}</span>`)
           $(`${which} ${target} .points`).animate({
@@ -150,8 +154,9 @@ $('form').submit(() => {
           $(`.score-container ${which} .score`).text(Number($(`.score-container ${which} .score`).text()) + point)
         }
 
+        //For all catagories
         const getPoints = (which) => {
-          addPoints(which,'.titles',$(`${which} .titles`).text().split(",").length * 10)
+          addPoints(which,'.titles',$(`${which} .titles`).children().length * 10)
           setTimeout(() => {
             addPoints(which,'.total-stars',$(`${which} .total-stars`).text() * 20)
           },1400)
@@ -171,46 +176,58 @@ $('form').submit(() => {
             addPoints(which,'.following',$(`${which} .following`).text() * 5)
           },8400)
         }
+        //Get the scores
         const getLeft = () => {
           getPoints('.left');
           setTimeout(function() {
             getPoints('.right');
           }, 700);
 
+          //Calculate score results
           setTimeout(function() {
             console.log("Getting WINNER")
             let pointRight = Number($(`.score-container .right .score`).text())
             let pointLeft = Number($(`.score-container .left .score`).text())
             if(pointLeft > pointRight) {
               $('#winner-result .username').text($('.left .username').text())
+              $('.right').animate({
+                opacity: '0.5'
+              }, 500)
             } else if (pointRight > pointLeft) {
               $('#winner-result .username').text($('.right .username').text())
+              $('.left').animate({
+                opacity: '0.5'
+              }, 500)
             } else { //DRAW
               $('#winner-result .label').text("DRAW")
               $('#winner-result .username').text("")
             }
-            $('.versus').addClass('hide')
+            $('.versus').animate({
+              bottom: '-500px'
+            }, 500, () => {
+              $('.versus').addClass('hide')
+            })
+            $('#winner-result').css("position","absolute")
+            $('#winner-result').css("top","350px")
             $('#winner-result').removeClass("hide")
+            //Add winner animation
             //Scroll to the winner result
             $('html, body').animate({
-                scrollTop: $('#winner-result').offset().top
+                scrollTop: $('#winner-result').offset().top - 100
             }, 500);
           }, 10000);
         }
+        //Getting score timeout
         const gettingScore = () => {
           setTimeout(function() {
             getLeft()
           }, 500);
         }
 
+        //Animate vs image and then call to get scores
         $('.versus').animate({
           bottom: '-100px'
         }, 500, gettingScore)
-
-        //Cards slide in from left and right
-        //VERSES appear
-        //Number of points appear on each attribute
-        //Winner message appears 
       }
     })
     .catch(err => {

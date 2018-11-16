@@ -39,6 +39,8 @@ button:active {
 #winner-result {
     color: white;
 
+    z-index: 1;
+
     display: inline-box;
     padding: 20px;
     margin: auto;
@@ -133,10 +135,12 @@ button:active {
     flex-direction: row;
     flex-wrap: wrap;
     color: green;
+    font-size: 20pt;
 }
 
 .points {
     position:absolute;
     color:green;
+    font-size: 20pt;
     text-shadow: 3px 3px 0 rgba(1, 31, 3, 0.8);
 }
