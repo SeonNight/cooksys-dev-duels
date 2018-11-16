@@ -46,11 +46,13 @@ export default () => {
         }}})
   }
 
+  //Get repo info
   const getRepoInfo = (url) => {
     return getInfo(url)
       .then(data => getLanguages(data) //Favorite language
         .then(languages => {
-          if(data.length == 0) { //If you do nto have any repos
+          console.log(data)
+          if(data.length == 0) { //If you do not have any repos
             return {
               total_stars: 0,
               highest_starred: 0,
@@ -101,14 +103,13 @@ export default () => {
     return titles
   }
 
+  //Get user informatin from AXIOS
   const getUserInfo = (username) => {
-    return axios.get(`http://api.github.com/users/`+username, {
-      headers: {
-        'Authorization': token
-      }
-    }).then(response => response.data)
+    return getInfo(`http://api.github.com/users/`+username)
       .then(data => {
+        //Get repo data
         return getRepoInfo(data.repos_url)
+          //Put data into a nice readable file
           .then(repoData => {
             return {
               status: 200,
@@ -153,7 +154,6 @@ export default () => {
   /** GET /api/user/:username - Get user */
   router.get('/user/:username', validate(validation.user), (req, res) => {
     /*
-      TODO
       Fetch data for user specified in path variable
       parse/map data to appropriate structure and return as JSON object
     */
@@ -168,7 +168,6 @@ export default () => {
   /** GET /api/users? - Get users */
   router.get('/users/', validate(validation.users), (req, res) => {
     /*
-      TODO
       Fetch data for users specified in query
       parse/map data to appropriate structure and return as a JSON array
     */
