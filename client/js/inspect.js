@@ -1,23 +1,39 @@
 /* eslint-disable no-undef */
 $('form').submit(() => {
   const username = $('form input').val()
-  console.log(`examining ${username}`)
+  $('.user-error').addClass('hide')
+  $('.user-results').addClass('hide')
+  //Put loading message
+  $('.loading').removeClass('hide')
+  if(username == "") {
+    $('.loading').addClass('hide')
+    $('.user-error').removeClass('hide')
+    $('.error').text('Please Input Username')
+    return false;
+  }
+
+  const addTitles = (titles) => {
+    $('.titles').text("")
+    titles.forEach((titleInfo) => {
+      $('.titles').append(`<span class="tooltip"><img src="${titleInfo[2]}" alt="${titleInfo[0]}"/>
+        <span class="tooltiptext">${titleInfo[1]}</span></span>`)
+    })
+  }
 
   // Fetch data for given user
-  // (https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
   fetch(`${USER_URL}/${username}`)
     .then(response => response.json()) // Returns parsed json data from response body as promise
     .then(data => {
+      //Remove loading message
+      $('.loading').addClass('hide')
       if(data["status"] == 200) {
-        console.log(`Got data for ${username}`)
-        console.log(data)
         $('.username').text(data.username)
         $('.full-name').text(data.name)
         $('.location').text(data.location)
         $('.email').text(data.email)
         $('.bio').text(data.bio)
         $('.avatar').attr("src",data.avatar_url)
-        $('.titles').text(data.titles)
+        addTitles(data.titles)
         $('.favorite-language').text(data.favorite_language)
         $('.total-stars').text(data.total_stars)
         $('.most-starred').text(data.highest_starred)
@@ -25,18 +41,20 @@ $('form').submit(() => {
         $('.perfect-repos').text(data.perfect_repos)
         $('.followers').text(data.followers)
         $('.following').text(data.following)
-        $('.user-results').removeClass('hide') // Display '.user-results' element
+        //Display and hide
+        $('.user-results').removeClass('hide')
         $('.user-error').addClass('hide')
+        //Scroll to container
+        $('html, body').animate({
+            scrollTop: $('.user-results').offset().top
+        }, 500);
       } else {
-        console.log(`Error getting data for ${username}`)
-        console.log(data.status)
         $('.user-results').addClass('hide')
         $('.user-error').removeClass('hide')
         $('.error').text(username + ' not found')
       }
     })
     .catch(err => {
-      console.log(`Error getting data for ${username}`)
       console.log(err)
       $('.user-results').addClass('hide')
       $('.user-error').removeClass('hide')

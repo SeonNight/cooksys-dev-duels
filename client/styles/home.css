@@ -54,7 +54,11 @@ button.duel:hover {
     cursor: pointer;
     background-color: rgb(133, 0, 0);
     color: white;
-} 
+}
+
+button.duel:active {
+    background-color: rgb(206, 206, 206);
+}
 
 button.duel span.first-sword {
     cursor: pointer;

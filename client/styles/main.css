@@ -1,15 +1,16 @@
 body {
     background-color: #efefef;
-    background-image: url("images/abstract-access-close-up-small.jpg");
+    /*background-image: url("images/abstract-access-close-up-small.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
-    background-size: cover;
+    background-size: cover;*/
 
     width: 100vw;
     height: 100vh;
 
-    font-family: "Arial Black", "Gadget", sans-serif;
+    font-family: "Arial Black", "Gadget", Helvetica, sans-serif;
+    /*'league_gothicregular', Arial, Helvetica, sans-serif;*/
 }
 
 .hide {
@@ -75,16 +76,17 @@ main section {
 a {
     margin: 0 12px;
     text-decoration: none;
-    color: rgb(185, 185, 185);
+    color: rgb(0, 0, 0);
 }
 
 a:hover {
     text-decoration: none;
-    color: rgb(255, 255, 255);
+    color: rgb(88, 88, 88);
 }
 
 a.active {
     font-weight: bold;
+    color: rgb(88, 88, 88);
 }
 
 button {
@@ -100,7 +102,15 @@ button:hover {
     cursor: pointer;
     background-color: #0f0044;
     color: white;
-} 
+}
+
+button:active {
+    background-color: rgb(206, 206, 206);
+}
+
+button:focus {
+    outline:0;
+}
 
 input {
     text-align: center;
@@ -123,11 +133,6 @@ input:-ms-input-placeholder {
 }
 
 
-/*Make sure the image isn't too big*/
-img {
-    width: 200px;
-}
-
 /*User Results*/
 .user-results {
     width: 300px;
@@ -135,15 +140,23 @@ img {
     padding: 20px;
     margin: auto;
     margin-bottom: 30px;
-    background-color: rgb(189, 139, 92);
-    background-image: url('images/abstract-ancient-antique-235985.jpg');
+    background-color: rgb(224, 224, 224);
+    background-image: url('images/card.png');
     background-size: cover;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 /*Username*/
 span.username {
     font-size: 20pt;
     font-weight: bold;
+    background-color: rgb(44, 44, 44);
+    color: white;
+    padding: 10px;
+    width: 80%;
+    text-align: center;
+    border-radius: 8px;
 }
 
 /*Stat Default*/
@@ -171,4 +184,86 @@ span.username {
 .stat .value {
     justify-content: flex-end;
     white-space: nowrap;
+}
+
+/*Loading message*/
+.loading {
+    display: flex;
+    flex-direction: row;
+}
+.loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #34db58;
+  width: 12px;
+  height: 12px;
+  margin: 10px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+/* load animation */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+ 
+    position: absolute;
+    z-index: 1;
+
+    display:inline-block;
+
+    font-size: 8pt;
+    width: 150px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 5px;
+    border-radius: 6px;
+    white-space: normal;
+    word-wrap: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip {
+    margin-left: 2px;
+    border: solid 1px black;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+/*Make sure the images isn't too big*/
+.avatar {
+    width: 200px;
+}
+.title-icon {
+    width: 20px;
+}
+
+.email {
+    color: rgb(102, 102, 102);
+    font-size: 10pt;
+}
+
+.location {
+    color: rgb(102, 102, 102);
+    font-size: 10pt;
+}
+
+.bio {
+    color: grey;
+    font-size: 10pt;
+    font-style: italic;
+    text-align: center;
 }

@@ -73,29 +73,29 @@ export default () => {
   const getTitles = (data, repoData) => {
     let titles = []
     if(repoData.num_fork/repoData.num_repos > 0.5) { //50% or more repositories are forked
-      titles.push('Forker')
+      titles.push(['Forker','More than 50% of user\'s repositories are forked','styles/images/title-fork.png'])
     }
 
     if(repoData.languages.num_lang == 1) { //100% of repositories use the same language
-      titles.push('One-Trick Poney')
+      titles.push(['One-Trick Pony','One-Trick Pony: 100% of repositories use the same language','styles/images/title-pony.png'])
     } else if (repoData.languages.num_lang > 10) { //Uses more than 10 languages across all repositories
-      titles.push('Jack of all Trades')
+      titles.push(['Jack of all Trades','Jack of all Trades: Use more than 10 languages across all repositories','styles/images/title-jack.png'])
     }
 
     if(data.following > data.followers * 2) { //The number of people this user is following is at least double the number of followers
-      titles.push('Staker')
+      titles.push(['Stalker','Stalker: The number of people this user is following is at least double the number of followers','styles/images/title-stalker.png'])
     } else if (data.followers > data.following * 2) { //The number of followers this user has is at least double the number of following
-      titles.push('Mr. Popular')
+      titles.push(['Mr. Popular','Mr. Popular: The number of followers this user has is at least double the number of following','styles/images/title-popular.png'])
     }
   
     if(repoData.num_repos == 0) { //Have no public repositories
-      titles.push('Wall Flower')
+      titles.push(['Wall Flower','Wall Flower: Has no public repositories','styles/images/title-wallflower.png'])
     }
 
     if(titles.length == 0) {  //Have no titles
-      titles.push('Titleless')
+      titles.push(['Titleless','Titleless: Has no titles','styles/images/title-null.png'])
     } else if (titles.length > 3) { //Has more than 3 titles
-      titles.push('Title Collector')
+      titles.push(['Title Collector','Title Collector: Has three ore more titles','styles/images/title-collector.png'])
     }
 
     return titles
@@ -114,12 +114,12 @@ export default () => {
               status: 200,
               username: data.login,
               name: data.name,
-              location: data.location,
-              email: data.email,
-              bio: data.bio,
+              location: (data.location == null) ? 'No location' : data.location,
+              email: (data.email == null) ? 'No email' : data.email,
+              bio: (data.bio == null) ? 'No bio' : data.bio,
               avatar_url: data.avatar_url,
               titles: getTitles(data,repoData),
-              favorite_language: repoData.languages.fav,
+              favorite_language: (repoData.languages.fav == null) ? 'No favorite' : repoData.languages.fav,
               public_repos: data.public_repos,
               total_stars: repoData.total_stars,
               highest_starred: repoData.highest_starred,
@@ -160,10 +160,6 @@ export default () => {
     getUserInfo(req.params.username)
       .then(data => res.json(data))
       .catch(error => {
-        if (error.response) {
-          console.log(error.response.status)
-          console.log(error.response.data)
-        }
         res.json({status: error.response.status, message: error.response.data.message})
       })
   })
@@ -179,10 +175,6 @@ export default () => {
    Promise.all(req.query.username.map(username => getUserInfo(username)))
     .then(data => res.json(data))
     .catch(error => {
-      if (error.response) {
-        console.log(error.response.status)
-        console.log(error.response.data)
-      }
       res.json({status: error.response.status, message: error.response.data.message})
     })
   })
