@@ -21,6 +21,7 @@ $('form').submit(() => {
   $('.duel-container').removeClass('hide')
   $('.loading').removeClass('hide')
   $('.versus').addClass('hide')
+  $('.score-containter').addClass('hide')
 
   //Make sure both left and right Names are given
   if(usernameLeft == "") {
@@ -65,7 +66,6 @@ $('form').submit(() => {
         $('.left .perfect-repos').text(data.perfect_repos)
         $('.left .followers').text(data.followers)
         $('.left .following').text(data.following)
-        $('.left').removeClass('hide')
       } else {
         $('#error-left').removeClass('hide')
         $('#error-left .error').text(usernameLeft + ' not found')
@@ -88,7 +88,6 @@ $('form').submit(() => {
           $('.right .perfect-repos').text(data.perfect_repos)
           $('.right .followers').text(data.followers)
           $('.right .following').text(data.following)
-          $('.right').removeClass('hide')
         } else {
           $('#error-right').removeClass('hide')
           $('#error-right .error').text(usernameRight + ' not found')
@@ -99,44 +98,119 @@ $('form').submit(() => {
       $('html, body').animate({
           scrollTop: $('.duel-container').offset().top
       }, 500);
-      $('.versus').removeClass('hide')
       //Make sure there are no errors on either side
       if($('#error-right').hasClass("hide") && $('#error-left').hasClass("hide")){
-        let pointRight = $('.right .titles').text().split(",").length * 10
-        pointRight += Number($('.right .total-stars').text()) * 20
-        pointRight += Number($('.right .highest-starred').text()) * 10
-        pointRight += Number($('.right .public-repos').text()) * 10
-        pointRight += Number($('.right .followers').text()) * 50
-        pointRight += Number($('.right .following').text()) * 5
-
-        let pointLeft = $('.left .titles').text().split(",").length * 10
-        pointLeft += Number($('.left .total-stars').text()) * 20
-        pointLeft += Number($('.left .highest-starred').text()) * 10
-        pointLeft += Number($('.left .public-repos').text()) * 10
-        pointLeft += Number($('.left .followers').text()) * 50
-        pointLeft += Number($('.left .following').text()) * 5
-
-        if(pointLeft > pointRight) {
-          $('#winner-result .username').text($('.left .username').text())
-        } else if (pointRight > pointLeft) {
-          $('#winner-result .username').text($('.right .username').text())
-        } else { //DRAW
-          $('#winner-result .label').text("DRAW")
-          $('#winner-result .username').text("")
+        //Set up score
+        $('.score-container').removeClass('hide')
+        $(`.score-container .left .score`).text(0)
+        $(`.score-container .right .score`).text(0)
+        //Set up for animations
+        $('.versus').css("bottom", -500)
+        $('.left').css("position", 'relative')
+        $('.left').css("right", '1000px')
+        $('.right').css("position", 'relative')
+        $('.right').css("right", '-1000px')
+        //Make em all visible
+        $('.versus').removeClass('hide')
+        $('.left').removeClass('hide')
+        $('.right').removeClass('hide')
+        //ANIMATE!
+        $('.left').animate({
+          right: '0px'
+        }, 500, () => {
+            $('.left').animate({
+              right: '10px'
+            }, 100, () => {
+              $('.left').animate({
+                right: '0px'
+              }, 100)
+            })
+          })
+        $('.right').animate({
+          right: '0px'
+        }, 500, () => {
+            $('.right').animate({
+              right: '-10px'
+            }, 100, () => {
+              $('.right').animate({
+                right: '0px'
+              }, 100)
+            })
+          })
+        
+        //DUELING! for points! :D
+        const addPoints = (which, target, point) => {
+          $(`${which} ${target}`).append(`<span class="points">+${point}</span>`)
+          $(`${which} ${target} .points`).animate({
+            bottom: '+=10px',
+            opacity: '0'
+          }, 1000, () => {
+              $(`${which} ${target} .points`).remove()
+            })
+          $(`.score-container ${which} .score`).text(Number($(`.score-container ${which} .score`).text()) + point)
         }
-        //$('#winner-result').css("height",0)
-        $('#winner-result').removeClass("hide")
-        $('#winner-result').animate({
-          opacity: 1,
-          left: "+=50",
-          height: "100%"
-        }, 5000, function() {
-          console.log("Done")
-        })
+
+        const getPoints = (which) => {
+          addPoints(which,'.titles',$(`${which} .titles`).text().split(",").length * 10)
+          setTimeout(() => {
+            addPoints(which,'.total-stars',$(`${which} .total-stars`).text() * 20)
+          },1400)
+          setTimeout(() => {
+            addPoints(which,'.highest-starred',$(`${which} .highest-starred`).text() * 10)
+          },2800)
+          setTimeout(() => {
+            addPoints(which,'.public-repos',$(`${which} .public-repos`).text() * 10)
+          },4200)
+          setTimeout(() => {
+            addPoints(which,'.perfect-repos',$(`${which} .perfect-repos`).text() * 10)
+          },5600)
+          setTimeout(() => {
+            addPoints(which,'.followers',$(`${which} .followers`).text() * 50)
+          },7000)
+          setTimeout(() => {
+            addPoints(which,'.following',$(`${which} .following`).text() * 5)
+          },8400)
+        }
+        const getLeft = () => {
+          getPoints('.left');
+          setTimeout(function() {
+            getPoints('.right');
+          }, 700);
+
+          setTimeout(function() {
+            console.log("Getting WINNER")
+            let pointRight = Number($(`.score-container .right .score`).text())
+            let pointLeft = Number($(`.score-container .left .score`).text())
+            if(pointLeft > pointRight) {
+              $('#winner-result .username').text($('.left .username').text())
+            } else if (pointRight > pointLeft) {
+              $('#winner-result .username').text($('.right .username').text())
+            } else { //DRAW
+              $('#winner-result .label').text("DRAW")
+              $('#winner-result .username').text("")
+            }
+            $('.versus').addClass('hide')
+            $('#winner-result').removeClass("hide")
+            //Scroll to the winner result
+            $('html, body').animate({
+                scrollTop: $('#winner-result').offset().top
+            }, 500);
+          }, 10000);
+        }
+        const gettingScore = () => {
+          setTimeout(function() {
+            getLeft()
+          }, 500);
+        }
+
+        $('.versus').animate({
+          bottom: '-100px'
+        }, 500, gettingScore)
+
         //Cards slide in from left and right
         //VERSES appear
         //Number of points appear on each attribute
-        //Winner message appears
+        //Winner message appears 
       }
     })
     .catch(err => {

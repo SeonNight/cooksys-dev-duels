@@ -125,4 +125,18 @@ button:active {
 .versus {
     position:absolute;
     bottom: -100px;
+    z-index: 1;
+}
+
+.score-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    color: green;
+}
+
+.points {
+    position:absolute;
+    color:green;
+    text-shadow: 3px 3px 0 rgba(1, 31, 3, 0.8);
 }
