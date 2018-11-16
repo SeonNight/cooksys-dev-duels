@@ -1,10 +1,6 @@
 body {
     background-color: #efefef;
-    /*background-image: url("images/abstract-access-close-up-small.jpg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;*/
+    z-index: 2;
 
     width: 100vw;
     height: 100vh;
@@ -217,7 +213,7 @@ span.username {
     visibility: hidden;
  
     position: absolute;
-    z-index: 1;
+    z-index: 4;
 
     display:inline-block;
 

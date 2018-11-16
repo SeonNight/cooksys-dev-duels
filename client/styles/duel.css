@@ -39,7 +39,10 @@ button:active {
 #winner-result {
     color: white;
 
-    z-index: 1;
+    position: absolute;
+    top: 350px;
+
+    z-index: 2;
 
     display: inline-box;
     padding: 20px;
@@ -127,7 +130,7 @@ button:active {
 .versus {
     position:absolute;
     bottom: -100px;
-    z-index: 1;
+    z-index: 5;
 }
 
 .score-container {

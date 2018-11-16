@@ -8,9 +8,41 @@
   It is up to the student to choose how to determine a 'winner'
   and displaying their profile/stats comparison in a way that signifies who won.
  */
+let id = []
+
 $('form').submit(() => {
   const usernameLeft = $('form [name=username-left]').val()
   const usernameRight = $('form [name=username-right]').val()
+
+  console.log("this is the start")
+
+  
+  console.log("is this the problem?")
+  //Stop animation
+  $('.versus').clearQueue()
+  $('.left').clearQueue()
+  $('.right').clearQueue()
+  $('#winner-result').clearQueue()
+
+  console.log("Help")
+  //Clear all timeouts
+  let length = id.length
+  for (var i = 0 ; i < length ; i++) {
+    clearTimeout(id.pop()); 
+  }
+
+  //Reset all animation attribues
+  $('.versus').css("bottom", -500)
+  $('.left').css("position", 'relative')
+  $('.left').css("right", '1000px')
+  $('.right').css("position", 'relative')
+  $('.right').css("right", '-1000px')
+  $('.left').css("opacity","1")
+  $('.right').css("opacity","1")
+  $('#winner-result').css("opacity","0")
+
+  console.log("not Refresthing")
+
   //Refresh Area
   $('#duel-error').addClass('hide')
   $('#error-left').addClass('hide')
@@ -22,6 +54,8 @@ $('form').submit(() => {
   $('.loading').removeClass('hide')
   $('.versus').addClass('hide')
   $('.score-containter').addClass('hide')
+
+  console.log("What is going on?")
 
   //Make sure both left and right Names are given
   if(usernameLeft == "") {
@@ -104,14 +138,6 @@ $('form').submit(() => {
         $('.score-container').removeClass('hide')
         $(`.score-container .left .score`).text(0)
         $(`.score-container .right .score`).text(0)
-        //Set up for animations
-        $('.versus').css("bottom", -500)
-        $('.left').css("position", 'relative')
-        $('.left').css("right", '1000px')
-        $('.right').css("position", 'relative')
-        $('.right').css("right", '-1000px')
-        $('.left').css("opacity","1")
-        $('.right').css("opacity","1")
         //Make em all visible
         $('.versus').removeClass('hide')
         $('.left').removeClass('hide')
@@ -157,34 +183,34 @@ $('form').submit(() => {
         //For all catagories
         const getPoints = (which) => {
           addPoints(which,'.titles',$(`${which} .titles`).children().length * 10)
-          setTimeout(() => {
+          id.push(setTimeout(() => {
             addPoints(which,'.total-stars',$(`${which} .total-stars`).text() * 20)
-          },1400)
-          setTimeout(() => {
+          },1400))
+          id.push(setTimeout(() => {
             addPoints(which,'.highest-starred',$(`${which} .highest-starred`).text() * 10)
-          },2800)
-          setTimeout(() => {
+          },2800))
+          id.push(setTimeout(() => {
             addPoints(which,'.public-repos',$(`${which} .public-repos`).text() * 10)
-          },4200)
-          setTimeout(() => {
+          },4200))
+          id.push(setTimeout(() => {
             addPoints(which,'.perfect-repos',$(`${which} .perfect-repos`).text() * 10)
-          },5600)
-          setTimeout(() => {
+          },5600))
+          id.push(setTimeout(() => {
             addPoints(which,'.followers',$(`${which} .followers`).text() * 50)
-          },7000)
-          setTimeout(() => {
+          },7000))
+          id.push(setTimeout(() => {
             addPoints(which,'.following',$(`${which} .following`).text() * 5)
-          },8400)
+          },8400))
         }
         //Get the scores
         const getLeft = () => {
           getPoints('.left');
-          setTimeout(function() {
+          id.push(setTimeout(function() {
             getPoints('.right');
-          }, 700);
+          }, 700))
 
           //Calculate score results
-          setTimeout(function() {
+          id.push(setTimeout(function() {
             console.log("Getting WINNER")
             let pointRight = Number($(`.score-container .right .score`).text())
             let pointLeft = Number($(`.score-container .left .score`).text())
@@ -207,21 +233,23 @@ $('form').submit(() => {
             }, 500, () => {
               $('.versus').addClass('hide')
             })
-            $('#winner-result').css("position","absolute")
-            $('#winner-result').css("top","350px")
+            //Winner animation
             $('#winner-result').removeClass("hide")
-            //Add winner animation
+            $('#winner-result').animate({
+              opacity: 1
+            }, 800)
+
             //Scroll to the winner result
             $('html, body').animate({
                 scrollTop: $('#winner-result').offset().top - 100
-            }, 500);
-          }, 10000);
+            }, 500)
+          }, 10000))
         }
         //Getting score timeout
         const gettingScore = () => {
-          setTimeout(function() {
+          id.push(setTimeout(function() {
             getLeft()
-          }, 500);
+          }, 500));
         }
 
         //Animate vs image and then call to get scores
