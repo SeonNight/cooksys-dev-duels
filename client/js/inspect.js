@@ -12,14 +12,6 @@ $('form').submit(() => {
     return false;
   }
 
-  const addTitles = (titles) => {
-    $('.titles').text("")
-    titles.forEach((titleInfo) => {
-      $('.titles').append(`<span class="tooltip"><img src="${titleInfo[2]}" alt="${titleInfo[0]}"/>
-        <span class="tooltiptext">${titleInfo[1]}</span></span>`)
-    })
-  }
-
   // Fetch data for given user
   fetch(`${USER_URL}/${username}`)
     .then(response => response.json()) // Returns parsed json data from response body as promise
@@ -27,20 +19,7 @@ $('form').submit(() => {
       //Remove loading message
       $('.loading').addClass('hide')
       if(data["status"] == 200) {
-        $('.username').text(data.username)
-        $('.full-name').text(data.name)
-        $('.location').text(data.location)
-        $('.email').text(data.email)
-        $('.bio').text(data.bio)
-        $('.avatar').attr("src",data.avatar_url)
-        addTitles(data.titles)
-        $('.favorite-language').text(data.favorite_language)
-        $('.total-stars').text(data.total_stars)
-        $('.most-starred').text(data.highest_starred)
-        $('.public-repos').text(data.public_repos)
-        $('.perfect-repos').text(data.perfect_repos)
-        $('.followers').text(data.followers)
-        $('.following').text(data.following)
+        setData(data)
         //Display and hide
         $('.user-results').removeClass('hide')
         $('.user-error').addClass('hide')
